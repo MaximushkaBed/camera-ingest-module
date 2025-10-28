@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+opencv-python-headless
+pydantic
+redis
+python-multipart
+Pillow
+aio-camera
+
+prometheus_client
