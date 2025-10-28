@@ -1,0 +1,78 @@
+# ⛔ Общие системные файлы
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.swo
+*.bak
+
+# 🧠 Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.py.class
+
+# 📦 Виртуальные окружения
+venv/
+.env/
+.venv/
+env/
+ENV/
+env.bak/
+env_old/
+
+# 🧰 IDE и редакторы
+.idea/
+.vscode/
+*.iml
+
+# 🗃️ Кэш и метаданные
+*.sqlite3
+*.db
+*.db-journal
+*.mypy_cache/
+*.pytest_cache/
+*.coverage
+coverage.xml
+htmlcov/
+
+# 📁 Сборки и дистрибутивы
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# 🧱 Docker
+*.pid
+*.pid.lock
+docker-compose.override.yml
+
+# 🔐 Секреты и ключи
+*.env
+*.key
+*.pem
+*.crt
+*.cert
+
+# 🧪 Тестовые артефакты
+test_output/
+test_results/
+tests/__pycache__/
+
+# 📸 Медиа и временные файлы
+uploads/
+media/
+*.mp4
+*.jpg
+*.png
+
+# 📊 Логи и метрики
+logs/
+*.log
+*.out
+*.err
+prometheus_data/
+grafana_data/
+loki_data/

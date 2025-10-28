@@ -5,6 +5,8 @@ from typing import List, Dict
 
 from app.services.redis_publisher import RedisPublisher
 
+
+
 # --- WebSocket Manager ---
 class ConnectionManager:
     """Manages active WebSocket connections."""
@@ -34,35 +36,41 @@ websocket_router = APIRouter()
 # --- Redis Listener for WebSocket Broadcast ---
 async def websocket_redis_listener():
     """Listens to Redis Pub/Sub and broadcasts messages to all WebSocket clients."""
-    redis_publisher = RedisPublisher()
-    # Use a separate connection for pubsub
-    r = redis_publisher.r.connection_pool.get_connection('pubsub', False)
-    pubsub = r.pubsub()
+    # Этот publisher теперь создает асинхронный клиент
+    redis_publisher = RedisPublisher() 
     
-    # Subscribe to all camera channels
-    pubsub.psubscribe("camera:*") 
+    # pubsub() от асинхронного клиента тоже асинхронный
+    pubsub = redis_publisher.r.pubsub()
+    
+    # Теперь этот await будет работать правильно
+    await pubsub.psubscribe("camera:*") 
     
     print("WebSocket Redis listener started, subscribed to camera:*")
 
-    # Use a thread-safe way to read from pubsub in an async environment
-    # This is a simplified approach, a dedicated thread or asyncio.to_thread is better for production
     while True:
-        message = pubsub.get_message(ignore_subscribe_messages=True)
-        if message and message["type"] == "message":
-            try:
-                # The message['data'] is already a JSON string from RedisPublisher
-                # We can broadcast it directly
-                data = json.loads(message["data"])
-                
-                # Broadcast the event
-                await manager.broadcast(data)
+        try:
+            message = await pubsub.get_message(ignore_subscribe_messages=True, timeout=1.0)
+            if message and message["type"] == "pmessage":
+                try:
+                    # Если вы установили decode_responses=True, message['data'] уже будет строкой
+                    data = json.loads(message["data"])
+                    
+                    await manager.broadcast(data)
 
-            except json.JSONDecodeError:
-                print(f"Failed to decode JSON message from Redis: {message['data']}")
-            except Exception as e:
-                print(f"Error in WebSocket Redis listener: {e}")
+                except json.JSONDecodeError:
+                    print(f"Failed to decode JSON message from Redis: {message['data']}")
+                except Exception as e:
+                    print(f"Error processing message: {e}")
         
-        # Prevent blocking the event loop
+        except Exception as e:
+            print(f"Error in WebSocket Redis listener: {e}")
+            # В случае ошибки с Redis стоит сделать небольшую паузу перед переподключением
+            await asyncio.sleep(5)
+            # Попробуем пересоздать подключение (упрощенный вариант)
+            redis_publisher = RedisPublisher()
+            pubsub = redis_publisher.r.pubsub()
+            await pubsub.psubscribe("camera:*")
+
         await asyncio.sleep(0.01)
 
 # Start the Redis listener as a background task on startup

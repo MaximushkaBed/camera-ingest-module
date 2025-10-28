@@ -34,14 +34,15 @@ async def telegram_event_listener():
     """Listens to Redis events and sends Telegram notifications for relevant events."""
     redis_publisher = RedisPublisher()
     pubsub = redis_publisher.r.pubsub()
-    # Subscribe to all camera channels
-    pubsub.psubscribe("camera:*") 
+
+    await pubsub.psubscribe("camera:*") 
     
     print("Telegram listener started, subscribed to camera:*")
 
-    for message in pubsub.listen():
-        if message["type"] == "pmessage":
+    async for message in pubsub.listen():
+        if message and message["type"] == "pmessage":
             try:
+                # data уже строка, так как в RedisPublisher стоит decode_responses=True
                 data = json.loads(message["data"])
                 event_type = data.get("event_type")
                 event_data = data.get("data", {})
