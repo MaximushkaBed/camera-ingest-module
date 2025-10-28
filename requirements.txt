@@ -5,6 +5,5 @@ pydantic
 redis
 python-multipart
 Pillow
-aio-camera
-
 prometheus_client
+python-telegram-bot
