@@ -1,31 +1,49 @@
+import asyncio
 from fastapi import FastAPI
-from app.api import cameras
-from app.services.telegram_bot import init_telegram_bot, telegram_event_listener
-from app.services.websocket_manager import websocket_router # New import for WebSocket
-from app.services.metrics import get_metrics
-from fastapi.responses import Response
+from contextlib import asynccontextmanager
 
-app = FastAPI(
-    title="Camera Ingest Module",
-    description="Service for ingesting RTSP and HTTP Push video streams, providing a circular buffer, and publishing events to a message bus.",
-    version="1.0.0"
-)
+from app.api.cameras import router as cameras_router
+from app.services.websocket_manager import websocket_router
 
-app.include_router(cameras.router, prefix="/api", tags=["cameras"])
-app.include_router(websocket_router, prefix="/ws", tags=["websocket"]) # Include WebSocket router
+from app.services.telegram_bot import start_telegram_listener, stop_telegram_listener
+from app.services.websocket_manager import websocket_redis_listener
 
-@app.get("/metrics", response_class=Response)
-async def metrics():
-    """Exposes Prometheus metrics."""
-    return Response(content=get_metrics(), media_type="text/plain")
+from dotenv import load_dotenv
+load_dotenv()
 
-@app.on_event("startup")
-async def startup_event():
-    await init_telegram_bot()
-    # Start the Telegram listener in a background task
-    import asyncio
-    asyncio.create_task(telegram_event_listener())
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Код, который выполнится при старте приложения
+    print("Application startup...")
+    
+    # Запускаем наших слушателей
+    start_telegram_listener()
+    # Для вебсокета тоже создадим задачу
+    websocket_task = asyncio.create_task(websocket_redis_listener())
 
-@app.get("/api/health")
-async def health_check():
-    return {"status": "ok", "service": "camera-ingest-module"}
+    yield
+
+    # Код, который выполнится при остановке приложения
+    print("Application shutdown...")
+    
+    # Грациозно останавливаем наших слушателей
+    await stop_telegram_listener()
+    
+    websocket_task.cancel()
+    try:
+        await websocket_task
+    except asyncio.CancelledError:
+        pass
+
+    
+
+# Создаем приложение с новым менеджером жизненного цикла
+app = FastAPI(lifespan=lifespan)
+
+# Подключаем роутеры
+app.include_router(cameras_router, prefix="/api", tags=["Cameras"])
+app.include_router(websocket_router, prefix="/api", tags=["WebSockets"])
+
+@app.get("/")
+async def root():
+    return {"message": "Camera Ingest Module is running."}
