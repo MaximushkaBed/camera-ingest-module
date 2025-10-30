@@ -1,0 +1,22 @@
+{
+    "cam_002": { "id": "cam_002", "source_type": "mjpeg", "source_url": "http://125.180.178.200:81/videostream.cgi?user=admin&pwd=24851056" },
+    "cam_003": { "id": "cam_003", "source_type": "mjpeg", "source_url": "http://213.236.250.78/mjpg/video.mjpg" },
+    "cam_005": { "id": "cam_005", "source_type": "mjpeg", "source_url": "https://webcam1.lpl.org/mjpg/video.mjpg" },
+    "cam_006": { "id": "cam_006", "source_type": "mjpeg", "source_url": "https://romecam.mvcc.edu/mjpg/video.mjpg?timestamp=1687505435116" },
+    "cam_007": { "id": "cam_007", "source_type": "mjpeg", "source_url": "http://view.dikemes.edu.gr/mjpg/video.mjpg" },
+    "cam_008": { "id": "cam_008", "source_type": "mjpeg", "source_url": "https://webcam.sparkassenplatz.info/cgi-bin/faststream.jpg?stream=full&fps=25" },
+    "cam_009": { "id": "cam_009", "source_type": "mjpeg", "source_url": "http://mbr-cam.dyndns.org:8088/mjpg/video.mjpg" },
+    "cam_010": { "id": "cam_010", "source_type": "mjpeg", "source_url": "https://ipcam-1.byrd.osu.edu/mjpg/video.mjpg" },
+    "cam_011": { "id": "cam_011", "source_type": "mjpeg", "source_url": "http://hoybakken.dyndns.org:9876/mjpg/video.mjpg" },
+    "cam_012": { "id": "cam_012", "source_type": "mjpeg", "source_url": "http://cam6284208.miemasu.net/nphMotionJpeg" },
+    "cam_013": { "id": "cam_013", "source_type": "mjpeg", "source_url": "https://ysp.ysnp.gov.tw/axis-cgi/mjpg/video.cgi" },
+    "cam_014": { "id": "cam_014", "source_type": "mjpeg", "source_url": "http://kamera.mikulov.cz:8888/mjpg/video.mjpg" },
+    "cam_015": { "id": "cam_015", "source_type": "mjpeg", "source_url": "https://csea-me-webcam.cse.umn.edu/mjpg/video.mjpg" },
+    "cam_016": { "id": "cam_016", "source_type": "mjpeg", "source_url": "https://pavwebcam.warrnambool.vic.gov.au/axis-cgi/mjpg/video.cgi" },
+    "cam_017": { "id": "cam_017", "source_type": "mjpeg", "source_url": "https://meishan.ysnp.gov.tw/axis-cgi/mjpg/video.cgi" },
+    "cam_018": { "id": "cam_018", "source_type": "mjpeg", "source_url": "http://lafarge.sarl2e.fr:3100/mjpg/video.mjpg" },
+    "cam_019": { "id": "cam_019", "source_type": "mjpeg", "source_url": "http://camera.sissiboo.com:86/mjpg/video.mjpg" },
+    "cam_020": { "id": "cam_020", "source_type": "mjpeg", "source_url": "https://webcam.vliegveldzeeland.nl:7171/axis-cgi/mjpg/video.cgi" },
+    "cam_021": { "id": "cam_021", "source_type": "mjpeg", "source_url": "http://eyc.synology.me:10001/mjpg/video.mjpg" },
+    "cam_022": { "id": "cam_022", "source_type": "mjpeg", "source_url": "http://nasukashi.aa0.netvolante.jp:8192/axis-cgi/mjpg/video.cgi" }
+}

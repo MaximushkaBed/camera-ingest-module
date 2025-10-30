@@ -7,9 +7,7 @@ from app.services.websocket_manager import websocket_router
 
 from app.services.telegram_bot import start_telegram_listener, stop_telegram_listener
 from app.services.websocket_manager import websocket_redis_listener
-
-from dotenv import load_dotenv
-load_dotenv()
+from app.services.camera_worker import load_cameras_from_db
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -20,6 +18,8 @@ async def lifespan(app: FastAPI):
     start_telegram_listener()
     # Для вебсокета тоже создадим задачу
     websocket_task = asyncio.create_task(websocket_redis_listener())
+
+    await load_cameras_from_db()
 
     yield
 
